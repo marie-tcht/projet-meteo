@@ -64,6 +64,22 @@ function clearSearchInput() {
     document.querySelector('.search-input').value = '';
 }
 
+/* fonction appelée toutes les heures pour rafraîchir les données avec la valeur actuelle de l'input */
+function refreshData() {
+    console.log('Rafraîchissement des données en cours...');
+
+    const city = searchInput.value;
+
+    callWeather(city);
+}
+
+/* J'ai appelé refreshData() pour vérifier que ma fonction fonctionne mais je le commente car c'était juste pour un essai
+refreshData();
+*/
+
+/* setInterval permet d'appeler à plusieurs reprises une fonction (premier paramètre) en lui fixant un délai (deuxième paramètre) */
+setInterval(refreshData, 3600000);
+
 
 
 /* j'appelle automatiquement la ville de Lyon au chargement de ma page */
