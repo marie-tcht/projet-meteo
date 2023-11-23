@@ -11,6 +11,7 @@ let callWeather = function(city) {
         .then((response) =>
             response.json().then((data) => {
                 displayWeather(data);
+                clearSearchInput();
                 /* vérifier que je récupère bien mes données en console */
                 console.log(data);
             })
@@ -42,11 +43,26 @@ function searchCity () {
     callWeather(document.querySelector('.search-input').value);
 }
 
+const searchInput = document.querySelector('.search-input');
+
+/* écouteur d'évènement : si l'utilisateur appuie sur entrée, la fonction searchCity va chercher la valeur entrée dans l'input */
+searchInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        searchCity();
+    }
+});
+
 /* fonction qui ajoute un écouteur d'évènement sur le bouton. Lorsque l'utilisateur clic, la fonction searchCity va chercher la valeur entrée dans l'input */
 document.querySelector('.search-button').addEventListener('click', function(event){
     event.preventDefault();
     searchCity();
 });
+
+/* je vide l'input après utilisation */
+function clearSearchInput() {
+    document.querySelector('.search-input').value = '';
+}
 
 
 
