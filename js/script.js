@@ -1,5 +1,5 @@
 
-/* la clé de l'API Open Weather */
+/* ma clé de l'API Open Weather */
 const apiKey = '7fcd26b709413d4c79589ce1fc2e8736';
 
 
@@ -37,5 +37,18 @@ function displayWeather(data) {
     }
 }
 
-/* j'apelle automatiquement la ville de Lyon au chargement de ma page */
+/* fonction qui va chercher la valeur entrée par l'utilisateur dans l'input pour afficher la météo de la ville demandée par l'utilisateur */
+function searchCity () {
+    callWeather(document.querySelector('.search-input').value);
+}
+
+/* fonction qui ajoute un écouteur d'évènement sur le bouton. Lorsque l'utilisateur clic, la fonction searchCity va chercher la valeur entrée dans l'input */
+document.querySelector('.search-button').addEventListener('click', function(event){
+    event.preventDefault();
+    searchCity();
+});
+
+
+
+/* j'appelle automatiquement la ville de Lyon au chargement de ma page */
 callWeather('Lyon');
