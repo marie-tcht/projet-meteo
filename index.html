@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- lien vers mes feuilles de styles. Reset.css : enlève tous les styles par défauts des navigateurs -->
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
-    
-    <title>Weather App</title>
+
+    <!-- accès à ma page javascript -->
+    <script src="js/meteo.js"></script>
+
+    <title>Weather App by Marie</title>
 </head>
 <body>
     <main class="main">
-        <div>        
-            <div class="weatherbox">
-                <div class="weather-item" id="city"> </div>
-                <div class="weather-item" id="temperature">
-                    <img src="img/temperature.png" alt="temperature">
-                    <span></span>
-                </div>
-                <div class="weather-item" id="humidity">
-                    <img src="img/humidity.png" alt="humidity">
-                    <span></span>
-                </div>
-                <div class="weather-item" id="wind">
-                    <img src="img/wind.png" alt="wind">
-                    <span></span>
-                </div>
+        <div class="weatherbox">
+            <div class="weather-item" id="city"> </div>
+            <div class="weather-item" id="temperature">
+                <img src="img/temperature.png" alt="temperature">
+                <span></span>
+            </div>
+            <div class="weather-item" id="humidity">
+                <img src="img/humidity.png" alt="humidity">
+                <span></span>
+            </div>
+            <div class="weather-item" id="wind">
+                <img src="img/wind.png" alt="wind">
+                <span></span>
             </div>
         </div>
-    
     </main>
-    <footer class="footer">
-        <div>Made with love by Marie</div>
-    </footer>
-    <script src="js/script.js"></script>
 </body>
 </html>
