@@ -1,86 +1,68 @@
 
-/* ma clé de l'API Open Weather */
-const apiKey = '7fcd26b709413d4c79589ce1fc2e8736';
-
-
-/* Appel à l'API avec la méthode fetch*/
-let callWeather = function(city) {
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fr`;
-
-    fetch(url)
-        .then((response) =>
-            response.json().then((data) => {
-                displayWeather(data);
-                clearSearchInput();
-                /* vérifier que je récupère bien mes données en console */
-                console.log(data);
-            })
-    )
-        .catch((error) => {
-            /* affiche en console une erreur si les données n'ont pas pu être récupérées */
-            console.error('error fetching weather data', error);
-        });
+// appel à l'API en utilisant la ville et l'apikey en paramètre.
+// fetch pour effectuer la requête, await pour attendre la réponse, fonction displayWeather pour afficher les données
+async function callWeather(city, apiKey) {
+    try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fr`;
+        const response = await fetch(url);
+        const data = await response.json();
+        displayWeather(data);
+        // vérifie en console les données récupérées
+        console.log(data);
+    } catch (error) {
+        // affiche en console un message d'erreur si l'appel à l'API n'a pas fonctionné
+        console.error('Error retrieving weather data', error);
+    }
 }
 
-/* Fonction displayWeather qui me permet d'aller sélectionner des éléments de mon HTML pour lui intégrer les données de mon appel à l'API */
+// affiche les données en récupérant les éléments de l'HTML
 function displayWeather(data) {
     if(data && data.main) {
         document.querySelector('#city').textContent = data.name;
 
-        /* Math.round pour arrondir la valeur de la température à l'entier le plus proche */
+        // Math.round pour arrondir la valeur de la température à l'entier le plus proche
         const temperature = Math.round(data.main.temp);
         document.querySelector('#temperature span').textContent =  temperature + '°C';
 
         document.querySelector('#humidity span').textContent = data.main.humidity + '%';
         document.querySelector('#wind span').textContent = data.wind.speed + 'm/s';
     } else {
+        // affiche une erreur si les données ne sont pas renvoyées (ville non récupérée)
         console.error('invalid data');
     }
 }
 
-/* fonction qui va chercher la valeur entrée par l'utilisateur dans l'input pour afficher la météo de la ville demandée par l'utilisateur */
-function searchCity () {
-    callWeather(document.querySelector('.search-input').value);
-}
-
-const searchInput = document.querySelector('.search-input');
-
-/* écouteur d'évènement : si l'utilisateur appuie sur entrée, la fonction searchCity va chercher la valeur entrée dans l'input */
-searchInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        searchCity();
+// lecture du fichier conf.json
+// fetch pour effectuer la requête, await pour attendre la réponse
+// si la lecture est ok, elle renvoie l'objet du fichier sinon elle renvoie null
+async function readConfig() {
+    try {
+        const response = await fetch('conf.json');
+        const config = await response.json();
+        // vérifie en console les données récupérées du fichier json
+        console.log(config);
+        return config;
+    } catch (error) {
+        // affiche un message d'erreur en console si la requête n'a pas abouti
+        console.error('Error reading the configuration file', error);
+        return null;
     }
-});
-
-/* fonction qui ajoute un écouteur d'évènement sur le bouton. Lorsque l'utilisateur clic, la fonction searchCity va chercher la valeur entrée dans l'input */
-document.querySelector('.search-button').addEventListener('click', function(event){
-    event.preventDefault();
-    searchCity();
-});
-
-/* je vide l'input après utilisation */
-function clearSearchInput() {
-    document.querySelector('.search-input').value = '';
 }
 
-/* fonction appelée toutes les heures pour rafraîchir les données avec la valeur actuelle de l'input */
-function refreshData() {
-    console.log('Rafraîchissement des données en cours...');
+// fonction appelée toutes les heures pour rafraîchir les données avec setInterval
+async function refreshData() {
+    // vérifie que la fonction est bien appelé en affichant un message dans la console
+    console.log('Data refresh in progress...');
 
-    const city = searchInput.value;
-
-    callWeather(city);
+    // appel readConfig pour lire le fichier json. Si ok, elle appelle callWeather pour récupérer les données météo
+    const config = await readConfig();
+    if (config) {
+        const { city, apiKey } = config;
+        await callWeather(city, apiKey);
+    }
 }
 
-/* J'ai appelé refreshData() pour vérifier que ma fonction fonctionne mais je le commente car c'était juste pour un essai
-refreshData();
-*/
-
-/* setInterval permet d'appeler à plusieurs reprises une fonction (premier paramètre) en lui fixant un délai (deuxième paramètre) */
 setInterval(refreshData, 3600000);
 
-
-
-/* j'appelle automatiquement la ville de Lyon au chargement de ma page */
-callWeather('Lyon');
+// Appel initial lors du chargement de la page
+refreshData();
